@@ -22,32 +22,24 @@ function movieRecommendationByGener(req, mainResponse) {
 		if (!error && response.statusCode === 200) {
 			resFromMovieDb = JSON.parse(body);
 			//Getting movie object from the result
-			movie = resFromMovieDb['results'][0];
+			let movieResults = resFromMovieDb['results'];
+			movie = movieResults[0];
+			console.log(movieResults);
 
 			// Creating facebook generic template
 			let facebookTemplate = {
 				facebook: {
-					attachment : {
-						type: 'template',
-						payload: {
-							template_type: 'generic',
-							elements: [{
-								title: movie['title'],
-								item_url: 'https://petersfancybrownhats.com',
-								image_url: 'https://image.tmdb.org/t/p/w500' + movie['poster_path'],
-								subtitles: 'rating :' + movie['vote_average'],
-								buttons: [{
-									type: 'web_url',
-									url: 'https://petersfancybrownhats.com',
-									titel: 'View Website'
-								}]
-							}]
-						}
-					}
-				}
+                    attachment: {
+                        type: "template",
+                        payload: {
+                            template_type: "generic",
+                            elements: generateTableElements(movieResults) 
+                        }
+                    }
+                }
 			}
 
-			console.log('log facebook template' + facebookTemplate.attachment.payload);
+			console.log('log facebook template' + facebookTemplate.facebook.attachment.payload);
 
 			let response = {
 				speech: 'Here are some movies from api that I think you might like',
@@ -132,6 +124,32 @@ function movieRecommendationByGener(req, mainResponse) {
 
 	function generateMovieGenerReq(generId) {
 		return 'https://api.themoviedb.org/3/genre/' + generId + '/movies?api_key=9f152fa2b443b453e0ddb2405b314216&language=en-US&include_adult=false&sort_by=created_at.asc'
+	}
+
+	function generateTableElements(tdbMovieResult) {
+		//console.log(tdbMovieResult);
+		let resultArray = [];
+		let index = 0;
+		tdbMovieResult.forEach(function(value){
+			if (resultArray.length === 10) return resultArray;
+			let text = value['id'] + ' ' + value['title'];
+			let itemUrl = 'https://www.themoviedb.org/movie/' + text.replace(' ', '-');
+			console.log(itemUrl);
+			resultArray.push({
+                                title: value['title'] + ' - ' + 'Ranking ' + value['vote_average'],
+                                item_url: itemUrl,
+                                image_url: 'https://image.tmdb.org/t/p/w500' + value['poster_path'],
+                                subtitle: value['overview'],// "Rating:" + value["vote_average"],
+                                buttons: [{
+                                    type: 'web_url',
+                                    url: 'https://petersfancybrownhats.com',
+                                    title: 'View Website'
+                                }]
+                            });
+			
+		});
+		
+		return resultArray;
 	}
 }
 
