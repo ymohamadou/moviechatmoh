@@ -47,7 +47,7 @@ function movieRecommendationByGener(req, mainResponse) {
 				}
 			}
 
-			console.log(facebookTemplate);
+			console.log('log facebook template' + facebookTemplate.attachment.payload);
 
 			let response = {
 				speech: 'Here are some movies from api that I think you might like',
