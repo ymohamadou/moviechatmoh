@@ -47,6 +47,8 @@ function movieRecommendationByGener(req, mainResponse) {
 				}
 			}
 
+			console.log(facebookTemplate);
+
 			let response = {
 				speech: 'Here are some movies from api that I think you might like',
 				displayText: 'Here are some movies from api that I think you might like',
