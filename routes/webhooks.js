@@ -68,7 +68,7 @@ function movieRecommendationByGener(req, mainResponse) {
 		// Retrive the Parameters from API.ai agent and return the gener Id according to the request.
 		var result = req.body["result"];
 		var parameter = result["parameters"];
-		var obtainedGener = parameter["movie-gener"];
+		var obtainedGener = parameter["movie-genre"];
 
 		switch (obtainedGener) {
 			case "Action":
